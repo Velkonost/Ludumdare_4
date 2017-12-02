@@ -443,9 +443,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             useFirstSkillAmerican();
         }
         if (keycode == Input.Keys.W) {
-            useSecondSkillAmerican();
-        }
-        if (keycode == Input.Keys.E) {
             useThirdSkillAmerican();
         }
         if (keycode == Input.Keys.R) {
@@ -454,15 +451,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
         if (keycode == Input.Keys.A) {
            useFirstSkillKorean();
-        }
-        if (keycode == Input.Keys.S) {
-            useSecondSkillKorean();
-        }
-        if (keycode == Input.Keys.D) {
-            useThirdSkillKorean();
-        }
-        if (keycode == Input.Keys.F) {
-            upgradeKorean();
         }
         return true;
     }
@@ -474,21 +462,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                 prostitutkaAm = true;
             }
         }
-    }
-
-    private void useSecondSkillAmerican() {
-//        if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
-//            americanEnergy -= (secondSkillCost - americanUpgradeLvl);
-//
-//            for (int i = 0; i < secondSkillCost; i++) {
-//                americanMen.add(
-//                        new AmericanManEntity(americanMenTexture.get(
-//                                generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
-//                        )
-//                );
-//                stage.addActor(americanMen.get(americanMen.size() - 1));
-//            }
-//        }
     }
 
     private void useFirstSkillKorean() {
@@ -505,24 +478,14 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         }
     }
 
-    private void useSecondSkillKorean() {
-//        if (koreanEnergy >= (secondSkillCost - koreanUpgradeLvl)) {
-//            koreanEnergy -= (secondSkillCost - koreanUpgradeLvl);
-//
-//            for (int i = 0; i < secondSkillCost; i++) {
-//                koreanMen.add(
-//                        new KoreanManEntity(koreanMenTexture.get(
-//                                generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
-//                        )
-//                );
-//                stage.addActor(koreanMen.get(koreanMen.size() - 1));
-//            }
-//        }
-    }
 
     private void useThirdSkillAmerican() {
-        if (americanEnergy >= (thirdSkillCost - americanUpgradeLvl)) {
+        if (
+                americanEnergy >= (thirdSkillCost - americanUpgradeLvl)
+                && koreanEnergy >= (thirdSkillCost - koreanUpgradeLvl)
+                ) {
             americanEnergy -= (thirdSkillCost - americanUpgradeLvl);
+            koreanEnergy -= (thirdSkillCost - koreanUpgradeLvl);
             switch (generateRandomSkillNum()) {
 
                 case 1:
@@ -581,28 +544,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         }
     }
 
-    private void useThirdSkillKorean() {
-        if (koreanEnergy >= (thirdSkillCost - koreanUpgradeLvl)) {
-            koreanEnergy -= (thirdSkillCost - koreanUpgradeLvl);
-
-            switch (generateRandomSkillNum()) {
-                case 1:
-                    applesAmDrop = true;
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    applesKorDrop = true;
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    break;
-            }
-        }
-    }
 
     private void upgradeKorean() {
         if (koreanEnergy >= 50) {
@@ -612,9 +553,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void upgradeAmerican() {
-        if (americanEnergy >= 50) {
+        if (americanEnergy >= 50 && koreanEnergy >= 50) {
             americanEnergy -= 50;
+            koreanEnergy -= 50;
             americanUpgradeLvl += 1f;
+            koreanUpgradeLvl += 1f;
         }
     }
 
