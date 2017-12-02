@@ -35,11 +35,12 @@ public class GameScreen extends BaseScreen {
 
     private ArrayList<KoreanManEntity> koreanMen;
 
+
     private float timerKoreanSpawn = 0;
-    private static final float KOREAN_SPAWN_COOLDAWN = 2f;
+    private static final float KOREAN_SPAWN_COOLDAWN = 0.5f;
 
 
-    private Texture koreanManTexture;
+    private ArrayList<Texture> koreanMenTexture;
     private Texture background;
 
     public GameScreen(MainGame game) {
@@ -53,6 +54,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         koreanMen = new ArrayList<KoreanManEntity>();
+        koreanMenTexture = new ArrayList<Texture>();
 
         renderer = new Box2DDebugRenderer();
         camera = new OrthographicCamera(32, 18);
@@ -61,9 +63,6 @@ public class GameScreen extends BaseScreen {
         getTextures();
 
         sp = new SpriteBatch();
-
-        koreanMen.add(new KoreanManEntity(koreanManTexture, world, 13f, 7f, 1f, 1f));
-        stage.addActor(koreanMen.get(0));
     }
 
     @Override
@@ -73,14 +72,14 @@ public class GameScreen extends BaseScreen {
 
         timerKoreanSpawn += delta;
         if (timerKoreanSpawn >= KOREAN_SPAWN_COOLDAWN) {
-            koreanMen.add(new KoreanManEntity(koreanManTexture, world, 0f, 7f, 1f, 1f));
-            stage.addActor(koreanMen.get(1));
+            koreanMen.add(new KoreanManEntity(koreanMenTexture.get(generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f));
+            stage.addActor(koreanMen.get(koreanMen.size() - 1));
             timerKoreanSpawn = 0;
         }
 
         stage.act();
         stage.getBatch().begin();
-//        stage.getBatch().draw(background, 0, 0, 1280, 720);
+        stage.getBatch().draw(background, 0, 0, 1280, 720);
         stage.getBatch().end();
         world.step(delta, 6, 2);
         camera.update();
@@ -89,8 +88,13 @@ public class GameScreen extends BaseScreen {
     }
 
     private void getTextures() {
-        koreanManTexture = game.getManager().get("badlogic.jpg");
-//        background = game.getManager().get("background.png");
+        koreanMenTexture.add((Texture) game.getManager().get("imgs/kor1.png"));
+        koreanMenTexture.add((Texture) game.getManager().get("imgs/kor21.png"));
+        koreanMenTexture.add((Texture) game.getManager().get("imgs/kor3.png"));
+        koreanMenTexture.add((Texture) game.getManager().get("imgs/kor4.png"));
+        koreanMenTexture.add((Texture) game.getManager().get("imgs/kor5.png"));
+
+        background = game.getManager().get("imgs/bg1.png");
     }
 
     public void hide() {
@@ -105,6 +109,18 @@ public class GameScreen extends BaseScreen {
 //        earth.remove();
         //    fireball.remove();
 //        fireball2.remove();
+    }
+
+    private int generateRandomKoreanImg() {
+        return (0 + (int) (Math.random() * 4));
+    }
+
+    private float generateRandomKoreanX() {
+        return (7f + (float)(Math.random() * 6f));
+    }
+
+    private float generateRandomKoreanY() {
+        return (0f +  (float)(Math.random() * 6f));
     }
 
     @Override
