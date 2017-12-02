@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import ru.hotboyzz.entities.AmericanManEntity;
 import ru.hotboyzz.entities.KoreanManEntity;
 
 import java.util.ArrayList;
@@ -34,13 +35,16 @@ public class GameScreen extends BaseScreen {
     SpriteBatch sp;
 
     private ArrayList<KoreanManEntity> koreanMen;
-
+    private ArrayList<AmericanManEntity> americanMen;
 
     private float timerKoreanSpawn = 0;
+    private float timerAmericanSpawn = 0;
     private static final float KOREAN_SPAWN_COOLDAWN = 0.5f;
+    private static final float AMERICAN_SPAWN_COOLDAWN = 1f;
 
 
     private ArrayList<Texture> koreanMenTexture;
+    private ArrayList<Texture> americanMenTexture;
     private Texture background;
 
     public GameScreen(MainGame game) {
@@ -54,7 +58,9 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         koreanMen = new ArrayList<KoreanManEntity>();
+        americanMen = new ArrayList<AmericanManEntity>();
         koreanMenTexture = new ArrayList<Texture>();
+        americanMenTexture = new ArrayList<Texture>();
 
         renderer = new Box2DDebugRenderer();
         camera = new OrthographicCamera(32, 18);
@@ -72,7 +78,12 @@ public class GameScreen extends BaseScreen {
 
         timerKoreanSpawn += delta;
         if (timerKoreanSpawn >= KOREAN_SPAWN_COOLDAWN) {
-            koreanMen.add(new KoreanManEntity(koreanMenTexture.get(generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f));
+            koreanMen.add(
+                    new KoreanManEntity(koreanMenTexture.get(
+                            generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                    )
+            );
+
             stage.addActor(koreanMen.get(koreanMen.size() - 1));
             timerKoreanSpawn = 0;
         }
@@ -111,7 +122,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private int generateRandomKoreanImg() {
-        return (0 + (int) (Math.random() * 4));
+        return (0 + (int) (Math.random() * 3));
     }
 
     private float generateRandomKoreanX() {
