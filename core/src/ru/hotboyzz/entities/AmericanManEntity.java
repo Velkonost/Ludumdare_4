@@ -51,12 +51,12 @@ public class AmericanManEntity extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         setPosition((body.getPosition().x) * PIXELS_IN_METER, (body.getPosition().y) * PIXELS_IN_METER);
 //        System.out.println(getX() / PIXELS_IN_METER);
-        if (getX() / PIXELS_IN_METER <= 7f) {
+        if (getX() / PIXELS_IN_METER <= 0f) {
 
-            setX(7f * PIXELS_IN_METER);
+            setX(0f * PIXELS_IN_METER);
         }
-        if (getX() / PIXELS_IN_METER >= 13.5f) {
-            setX(13.5f * PIXELS_IN_METER);
+        if (getX() / PIXELS_IN_METER >= 6.5f) {
+            setX(6.5f * PIXELS_IN_METER);
         }
         if (getY() / PIXELS_IN_METER <= 0f) {
             setY(0f * PIXELS_IN_METER);

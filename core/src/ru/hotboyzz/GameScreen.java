@@ -40,7 +40,7 @@ public class GameScreen extends BaseScreen {
     private float timerKoreanSpawn = 0;
     private float timerAmericanSpawn = 0;
     private static final float KOREAN_SPAWN_COOLDAWN = 0.5f;
-    private static final float AMERICAN_SPAWN_COOLDAWN = 1f;
+    private static final float AMERICAN_SPAWN_COOLDAWN = 0.5f;
 
 
     private ArrayList<Texture> koreanMenTexture;
@@ -88,6 +88,18 @@ public class GameScreen extends BaseScreen {
             timerKoreanSpawn = 0;
         }
 
+        timerAmericanSpawn += delta;
+        if (timerAmericanSpawn >= AMERICAN_SPAWN_COOLDAWN) {
+            americanMen.add(
+                    new AmericanManEntity(americanMenTexture.get(
+                            generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+                    )
+            );
+
+            stage.addActor(americanMen.get(americanMen.size() - 1));
+            timerAmericanSpawn = 0;
+        }
+
         stage.act();
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0, 1280, 720);
@@ -104,6 +116,9 @@ public class GameScreen extends BaseScreen {
         koreanMenTexture.add((Texture) game.getManager().get("imgs/kor3.png"));
         koreanMenTexture.add((Texture) game.getManager().get("imgs/kor4.png"));
         koreanMenTexture.add((Texture) game.getManager().get("imgs/kor5.png"));
+
+        americanMenTexture.add((Texture) game.getManager().get("imgs/am1.png"));
+        americanMenTexture.add((Texture) game.getManager().get("imgs/am2.png"));
 
         background = game.getManager().get("imgs/bg1.png");
     }
@@ -126,11 +141,23 @@ public class GameScreen extends BaseScreen {
         return (0 + (int) (Math.random() * 3));
     }
 
+    private int generateRandomAmericanImg() {
+        return (0 + (int) (Math.random() * 2));
+    }
+
     private float generateRandomKoreanX() {
         return (7f + (float)(Math.random() * 6f));
     }
 
+    private float generateRandomAmericanX() {
+        return (0f + (float)(Math.random() * 6f));
+    }
+
     private float generateRandomKoreanY() {
+        return (0f +  (float)(Math.random() * 6f));
+    }
+
+    private float generateRandomAmericanY() {
         return (0f +  (float)(Math.random() * 6f));
     }
 
