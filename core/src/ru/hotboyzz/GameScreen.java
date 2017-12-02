@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ru.hotboyzz.entities.AmericanManEntity;
+import ru.hotboyzz.entities.AppleEntity;
 import ru.hotboyzz.entities.KoreanManEntity;
 import ru.hotboyzz.entities.ProstitutkaEntity;
 
@@ -72,13 +73,16 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     private ArrayList<Texture> koreanMenTexture;
     private ArrayList<Texture> americanMenTexture;
-    private Texture background, prostitutka;
+    private Texture background, prostitutka, appleRed, appleGold, appleBlue;
 
     private Label textKoreans, textAmericans, energyKor, energyAm, lvlAmerican, lvlKor;
     private Label.LabelStyle textStyle;
 
     private ProstitutkaEntity prostitutki;
     private boolean isProstitutkaShowed = false;
+    private boolean isApplesShowed = false, applesDrop = false;
+
+    private ArrayList<AppleEntity> apples;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -99,6 +103,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         americanMen = new ArrayList<AmericanManEntity>();
         koreanMenTexture = new ArrayList<Texture>();
         americanMenTexture = new ArrayList<Texture>();
+
+        apples = new ArrayList<AppleEntity>();
 
         renderer = new Box2DDebugRenderer();
         camera = new OrthographicCamera(32, 18);
@@ -147,6 +153,19 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         stage.addActor(lvlAmerican);
         stage.addActor(energyKor);
         stage.addActor(energyAm);
+
+        if(applesDrop){
+            if(!isApplesShowed){
+                for(int i = 0; i<10; i++){
+                    if(generateRandomNum(3)==1) {
+                        apples.add(new AppleEntity(appleGold, world, generateRandomNum(6), 1, 0.5f, 0.5f));
+                    }
+                }
+            }
+            for(int i = 0; i<10; i++){
+                stage.addActor(apples.get(i));
+            }
+        }
 
         if(prostitutkaAm){
             if (!isProstitutkaShowed) {
@@ -252,6 +271,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
         prostitutka = game.getManager().get("imgs/prostitutki.png");
         background = game.getManager().get("imgs/bg1.png");
+        appleBlue = game.getManager().get("imgs/apple3.png");
+        appleGold = game.getManager().get("imgs/apple2.png");
+        appleRed = game.getManager().get("imgs/apple1.png");
     }
 
     public void hide() {
@@ -450,11 +472,13 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void useThirdSkillKorean() {
+        applesDrop = true;
         if (koreanEnergy >= (thirdSkillCost - koreanUpgradeLvl)) {
             koreanEnergy -= (thirdSkillCost - koreanUpgradeLvl);
 
             switch (generateRandomSkillNum()) {
                 case 1:
+                    applesDrop = true;
                     break;
                 case 2:
                     break;
@@ -496,6 +520,10 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             8 : + 60 energy enemy : red bull
         */
         return (1 + (int)(Math.random() * 8));
+    }
+
+    private int generateRandomNum(int r){
+        return (1+ (int)(Math.random()*r));
     }
 
 
