@@ -247,7 +247,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     americanMen.remove(0);
                 }
             } else {
-                rocketX -= 0.04f;
+                rocketX -= 0.08f;
             }
         }
 
@@ -382,7 +382,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         appleGold = game.getManager().get("imgs/apple2.png");
         appleRed = game.getManager().get("imgs/apple1.png");
 
-        rocket = game.getManager().get("imgs/apple1.png");
+        rocket = game.getManager().get("imgs/rocket.png");
     }
 
     public void hide() {

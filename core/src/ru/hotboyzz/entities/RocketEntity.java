@@ -45,7 +45,7 @@ public class RocketEntity extends Actor {
 
         body.setFixedRotation(false);
 
-        xVelocity = -2f;
+        xVelocity = -4f;
 
         box.dispose();
 
@@ -57,6 +57,7 @@ public class RocketEntity extends Actor {
         body.setLinearVelocity(xVelocity, -speed);
         setPosition((body.getPosition().x) * PIXELS_IN_METER, (body.getPosition().y) * PIXELS_IN_METER);
 
+        startAngle = 90;
         batch.draw(texture, getX(), getY(), width * PIXELS_IN_METER, height * PIXELS_IN_METER, width * PIXELS_IN_METER, height * PIXELS_IN_METER, 1,
                 1, startAngle, 1, 1, 900, 900, false, false);
         body.setTransform(body.getPosition().x, body.getPosition().y, (float) (startAngle * 3.14 / 180));
