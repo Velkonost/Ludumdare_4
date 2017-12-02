@@ -15,10 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import ru.hotboyzz.entities.AmericanManEntity;
-import ru.hotboyzz.entities.AppleEntity;
-import ru.hotboyzz.entities.KoreanManEntity;
-import ru.hotboyzz.entities.ProstitutkaEntity;
+import ru.hotboyzz.entities.*;
 
 import java.util.ArrayList;
 
@@ -54,6 +51,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private static final float ENERGY_COOLDAWN = 1f;
 
     private float prostitutkaAmX = 5f, prostitutkaAmY = 3f;
+    private float rocketX = 10f, rocketY = 3f;
     private boolean prostitutkaAm = false, prostitutkaKor = false;
     private float prostitutkaRot =  0f;
 
@@ -73,15 +71,19 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     private ArrayList<Texture> koreanMenTexture;
     private ArrayList<Texture> americanMenTexture;
-    private Texture background, prostitutka, appleRed, appleGold, appleBlue;
+    private Texture background, prostitutka, appleRed, appleGold, appleBlue, rocket;
 
     private Label textKoreans, textAmericans, energyKor, energyAm, lvlAmerican, lvlKor;
     private Label.LabelStyle textStyle;
 
     private ProstitutkaEntity prostitutki;
+    private RocketEntity rockets;
     private boolean isProstitutkaShowed = false;
     private boolean isApplesKorShowed = false, applesKorDrop = false;
     private boolean isApplesAmShowed = false, applesAmDrop = false;
+    private boolean isRocketsShowed = false;
+    private boolean isRockets = false;
+    private boolean isApplesShowed = false, applesDrop = false;
 
     private ArrayList<AppleEntity> applesAm, applesKor;
 
@@ -227,6 +229,28 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             }
         }
 
+        if(isRockets){
+            if (!isRocketsShowed) {
+                rockets = new RocketEntity(rocket, world, rocketX, rocketY, 2f, 2f);
+                isRocketsShowed = true;
+            }
+            stage.addActor(rockets);
+            if(rocketX < 2f){
+                rocketX = 3f;
+
+                rockets.remove();
+                isRockets = false;
+                isRocketsShowed = false;
+                int min = Math.min(americanMen.size(), koreanFirstSkillAmount);
+                for (int i = 0; i < min; i++) {
+                    americanMen.get(0).addAction(Actions.removeActor());
+                    americanMen.remove(0);
+                }
+            } else {
+                rocketX -= 0.04f;
+            }
+        }
+
         timerKoreanSpawn += delta;
         if (timerKoreanSpawn >= koreanSpawnCooldawn) {
             spawnKorean();
@@ -357,6 +381,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         appleBlue = game.getManager().get("imgs/apple3.png");
         appleGold = game.getManager().get("imgs/apple2.png");
         appleRed = game.getManager().get("imgs/apple1.png");
+
+        rocket = game.getManager().get("imgs/apple1.png");
     }
 
     public void hide() {
@@ -459,13 +485,15 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void useFirstSkillKorean() {
-        if (koreanEnergy >= (firstSkillCost - koreanUpgradeLvl)) {
-            koreanEnergy -= (firstSkillCost - koreanUpgradeLvl);
-
-            int min = Math.min(americanMen.size(), koreanFirstSkillAmount);
-            for (int i = 0; i < min; i++) {
-                americanMen.get(0).addAction(Actions.removeActor());
-                americanMen.remove(0);
+        if (!isRockets) {
+            if (koreanEnergy >= (firstSkillCost - koreanUpgradeLvl)) {
+                koreanEnergy -= (firstSkillCost - koreanUpgradeLvl);
+                isRockets = true;
+//                int min = Math.min(americanMen.size(), koreanFirstSkillAmount);
+//                for (int i = 0; i < min; i++) {
+//                    americanMen.get(0).addAction(Actions.removeActor());
+//                    americanMen.remove(0);
+//                }
             }
         }
     }

@@ -45,7 +45,7 @@ public class RocketEntity extends Actor {
 
         body.setFixedRotation(false);
 
-        xVelocity = 2f;
+        xVelocity = -2f;
 
         box.dispose();
 
