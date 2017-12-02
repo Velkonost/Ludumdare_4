@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ru.hotboyzz.entities.AmericanManEntity;
 import ru.hotboyzz.entities.KoreanManEntity;
-import ru.hotboyzz.entities.Prostitutka;
+import ru.hotboyzz.entities.ProstitutkaEntity;
 
 import java.util.ArrayList;
 
@@ -77,7 +77,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private Label textKoreans, textAmericans, energyKor, energyAm, lvlAmerican, lvlKor;
     private Label.LabelStyle textStyle;
 
-    private Prostitutka prostitutki;
+    private ProstitutkaEntity prostitutki;
+    private boolean isProstitutkaShowed = false;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -104,7 +105,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         camera.translate(0, 1);
 
         getTextures();
-        prostitutki = new Prostitutka(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 2f, 2f);
 
         Gdx.input.setInputProcessor(this);
 
@@ -115,7 +115,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
         textKoreans = new Label("Koreans: " + koreanMen.size(),textStyle);
         textAmericans = new Label("Americans: " + americanMen.size(),textStyle);
@@ -150,18 +149,19 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         stage.addActor(energyAm);
 
         if(prostitutkaAm){
-
-            prostitutki.setX(prostitutkaAmX);
+            if (!isProstitutkaShowed) {
+                prostitutki = new ProstitutkaEntity(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 2f, 2f);
+                isProstitutkaShowed = true;
+            }
             stage.addActor(prostitutki);
-            if(prostitutkaAmX>7f){
+            if(prostitutkaAmX > 7f){
                 prostitutkaAmX = 5f;
-                prostitutki.setBodyX(prostitutkaAmX);
                 prostitutki.remove();
                 prostitutkaAm = false;
-            }else{
-
-                prostitutkaAmX+=0.02f;
-                prostitutki.setX(prostitutkaAmX);
+                isProstitutkaShowed = false;
+            } else {
+                prostitutkaAmX += 0.02f;
+//                prostitutki.setBodyX(0f);
             }
         }
 
@@ -238,7 +238,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         lvlAmerican.remove();
         lvlKor.remove();
 
-        prostitutki.remove();
+//        prostitutki.remove();
     }
 
     private void getTextures() {
@@ -331,25 +331,14 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void useFirstSkillAmerican() {
-        if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
-            americanEnergy -= (firstSkillCost - americanUpgradeLvl);
-
-            int min = Math.min(koreanMen.size(), americanFirstSkillAmount);
-            for (int i = 0; i < min; i++) {
-                koreanMen.get(0).addAction(Actions.removeActor());
-                koreanMen.remove(0);
-            }
-
-            if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
-                americanEnergy -= (secondSkillCost - americanUpgradeLvl);
+        if (!prostitutkaAm) {
+            if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
+                americanEnergy -= (firstSkillCost - americanUpgradeLvl);
                 prostitutkaAm = true;
-                for (int i = 0; i < secondSkillCost; i++) {
-                    americanMen.add(
-                            new AmericanManEntity(americanMenTexture.get(
-                                    generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
-                            )
-                    );
-                    stage.addActor(americanMen.get(americanMen.size() - 1));
+                int min = Math.min(koreanMen.size(), americanFirstSkillAmount);
+                for (int i = 0; i < min; i++) {
+                    koreanMen.get(0).addAction(Actions.removeActor());
+                    koreanMen.remove(0);
                 }
             }
         }
