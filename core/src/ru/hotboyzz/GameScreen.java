@@ -11,10 +11,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ru.hotboyzz.entities.AmericanManEntity;
 import ru.hotboyzz.entities.KoreanManEntity;
@@ -93,8 +92,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         font = new BitmapFont();
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
-
-
 
 
         koreanMen = new ArrayList<KoreanManEntity>();
@@ -302,32 +299,130 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         renderer.dispose();
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return true;
-    }
 
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.Q) {
-
-            if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
-                americanEnergy -= (firstSkillCost - americanUpgradeLvl);
-
-                int min = Math.min(koreanMen.size(), americanFirstSkillAmount);
-                for (int i = 0; i < min; i++) {
-                    koreanMen.get(0).addAction(Actions.removeActor());
-                    koreanMen.remove(0);
-                }
-                // - koreans
-            }
+            useFirstSkillAmerican();
         }
         if (keycode == Input.Keys.W) {
-            if(!prostitutkaAm){
-                if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
-                    americanEnergy -= (secondSkillCost - americanUpgradeLvl);
-                    prostitutkaAm = true;
-                    for (int i = 0; i < secondSkillCost; i++) {
+            useSecondSkillAmerican();
+        }
+        if (keycode == Input.Keys.E) {
+            useThirdSkillAmerican();
+        }
+        if (keycode == Input.Keys.R) {
+            upgradeAmerican();
+        }
+
+        if (keycode == Input.Keys.A) {
+           useFirstSkillKorean();
+        }
+        if (keycode == Input.Keys.S) {
+            useSecondSkillKorean();
+        }
+        if (keycode == Input.Keys.D) {
+            useThirdSkillKorean();
+        }
+        if (keycode == Input.Keys.F) {
+            upgradeKorean();
+        }
+        return true;
+    }
+
+    private void useFirstSkillAmerican() {
+        if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
+            americanEnergy -= (firstSkillCost - americanUpgradeLvl);
+
+            int min = Math.min(koreanMen.size(), americanFirstSkillAmount);
+            for (int i = 0; i < min; i++) {
+                koreanMen.get(0).addAction(Actions.removeActor());
+                koreanMen.remove(0);
+            }
+
+            if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
+                americanEnergy -= (secondSkillCost - americanUpgradeLvl);
+                prostitutkaAm = true;
+                for (int i = 0; i < secondSkillCost; i++) {
+                    americanMen.add(
+                            new AmericanManEntity(americanMenTexture.get(
+                                    generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+                            )
+                    );
+                    stage.addActor(americanMen.get(americanMen.size() - 1));
+                }
+            }
+        }
+    }
+
+    private void useSecondSkillAmerican() {
+        if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
+            americanEnergy -= (secondSkillCost - americanUpgradeLvl);
+
+            for (int i = 0; i < secondSkillCost; i++) {
+                americanMen.add(
+                        new AmericanManEntity(americanMenTexture.get(
+                                generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+                        )
+                );
+                stage.addActor(americanMen.get(americanMen.size() - 1));
+            }
+        }
+    }
+
+    private void useFirstSkillKorean() {
+        if (koreanEnergy >= (firstSkillCost - koreanUpgradeLvl)) {
+            koreanEnergy -= (firstSkillCost - koreanUpgradeLvl);
+
+            int min = Math.min(americanMen.size(), koreanFirstSkillAmount);
+            for (int i = 0; i < min; i++) {
+                americanMen.get(0).addAction(Actions.removeActor());
+                americanMen.remove(0);
+            }
+        }
+    }
+
+    private void useSecondSkillKorean() {
+        if (koreanEnergy >= (secondSkillCost - koreanUpgradeLvl)) {
+            koreanEnergy -= (secondSkillCost - koreanUpgradeLvl);
+
+            for (int i = 0; i < secondSkillCost; i++) {
+                koreanMen.add(
+                        new KoreanManEntity(koreanMenTexture.get(
+                                generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                        )
+                );
+                stage.addActor(koreanMen.get(koreanMen.size() - 1));
+            }
+        }
+    }
+
+    private void useThirdSkillAmerican() {
+        if (americanEnergy >= (thirdSkillCost - americanUpgradeLvl)) {
+            americanEnergy -= (thirdSkillCost - americanUpgradeLvl);
+            switch (generateRandomSkillNum()) {
+                case 1:
+                    System.out.println(1);
+                    for (int i = 0; i < 100; i++) {
+                        koreanMen.add(
+                                new KoreanManEntity(koreanMenTexture.get(
+                                        generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                                )
+                        );
+                        stage.addActor(koreanMen.get(koreanMen.size() - 1));
+                    }
+                    break;
+                case 2:
+                    System.out.println(2);
+                    int min = Math.min(americanMen.size(), 30);
+                    for (int i = 0; i < min; i++) {
+                        americanMen.get(0).addAction(Actions.removeActor());
+                        americanMen.remove(0);
+                    }
+                    break;
+                case 3:
+                    System.out.println(3);
+                    for (int i = 0; i < 30; i++) {
                         americanMen.add(
                                 new AmericanManEntity(americanMenTexture.get(
                                         generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
@@ -335,65 +430,91 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                         );
                         stage.addActor(americanMen.get(americanMen.size() - 1));
                     }
-                }
+                    break;
+                case 4:
+                    System.out.println(4);
+                    for (int i = 0; i < 100; i++) {
+                        americanMen.add(
+                                new AmericanManEntity(americanMenTexture.get(
+                                        generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+                                )
+                        );
+                        stage.addActor(americanMen.get(americanMen.size() - 1));
+                    }
+                    break;
+                case 5:
+                    System.out.println(5);
+                    //lose
+                    break;
+                case 6:
+                    System.out.println(6);
+                    //win
+                    break;
+                case 7:
+                    americanEnergy += 60;
+                    break;
+                case 8:
+                    koreanEnergy += 60;
+                    break;
+            }
+        }
+    }
 
-            }
-            // + americans
-        }
-        if (keycode == Input.Keys.E) {
-            if (americanEnergy >= (thirdSkillCost - americanUpgradeLvl)) {
-                americanEnergy -= (thirdSkillCost - americanUpgradeLvl);
-            }
-            // rand american
-        }
-        if (keycode == Input.Keys.R) {
-            // up americans skills
-            if (americanEnergy >= 50) {
-                americanEnergy -= 50;
-                americanUpgradeLvl += 1f;
-            }
-        }
+    private void useThirdSkillKorean() {
+        if (koreanEnergy >= (thirdSkillCost - koreanUpgradeLvl)) {
+            koreanEnergy -= (thirdSkillCost - koreanUpgradeLvl);
 
-        if (keycode == Input.Keys.A) {
-            if (koreanEnergy >= (firstSkillCost - koreanUpgradeLvl)) {
-                koreanEnergy -= (firstSkillCost - koreanUpgradeLvl);
+            switch (generateRandomSkillNum()) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+            }
+        }
+    }
 
-                int min = Math.min(americanMen.size(), koreanFirstSkillAmount);
-                for (int i = 0; i < min; i++) {
-                    americanMen.get(0).addAction(Actions.removeActor());
-                    americanMen.remove(0);
-                }
-            }
-            // - americans
+    private void upgradeKorean() {
+        if (koreanEnergy >= 50) {
+            koreanEnergy -= 50;
+            koreanUpgradeLvl += 1f;
         }
-        if (keycode == Input.Keys.S) {
-            if (koreanEnergy >= (secondSkillCost - koreanUpgradeLvl)) {
-                koreanEnergy -= (secondSkillCost - koreanUpgradeLvl);
+    }
 
-                for (int i = 0; i < secondSkillCost; i++) {
-                    koreanMen.add(
-                            new KoreanManEntity(koreanMenTexture.get(
-                                    generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
-                            )
-                    );
-                    stage.addActor(koreanMen.get(koreanMen.size() - 1));
-                }
-            }
-            // + koreans
+    private void upgradeAmerican() {
+        if (americanEnergy >= 50) {
+            americanEnergy -= 50;
+            americanUpgradeLvl += 1f;
         }
-        if (keycode == Input.Keys.D) {
-            if (koreanEnergy >= (thirdSkillCost - koreanUpgradeLvl)) {
-                koreanEnergy -= (thirdSkillCost - koreanUpgradeLvl);
-            }
-            // rand koreans
-        }
-        if (keycode == Input.Keys.F) {
-            // up koreans skills
-            if (koreanEnergy >= 50) {
-                koreanEnergy -= 50;
-                koreanUpgradeLvl += 1f;
-            }
-        }
+    }
+
+    private int generateRandomSkillNum() {
+        /*
+            1 : + 100 enemy : хороший урожай - падают яблоки с неба
+            2 : - 30 own : Миграция
+            3 : + 30 own : Миграция
+            4 : + 100 own : хороший урожай - падают яблоки с неба
+            5 : lose game : проигрыш
+            6 : win game : победа
+            7 : + 60 energy own : red bull
+            8 : + 60 energy enemy : red bull
+        */
+        return (1 + (int)(Math.random() * 8));
+    }
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean keyDown(int keycode) {
         return true;
     }
 
