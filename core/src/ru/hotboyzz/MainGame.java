@@ -30,6 +30,7 @@ public class MainGame extends Game {
         manager.load("imgs/luckylee.png", Texture.class);
         manager.load("imgs/am1.png", Texture.class);
         manager.load("imgs/am2.png", Texture.class);
+        manager.load("imgs/prostitutki.png", Texture.class);
 
         manager.finishLoading();
 

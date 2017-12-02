@@ -11,12 +11,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ru.hotboyzz.entities.AmericanManEntity;
 import ru.hotboyzz.entities.KoreanManEntity;
+import ru.hotboyzz.entities.Prostitutka;
 
 import java.util.ArrayList;
 
@@ -51,6 +53,10 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private float upSpawnSpeedCooldawn = 1f;
     private static final float ENERGY_COOLDAWN = 1f;
 
+    private float prostitutkaAmX = 5f, prostitutkaAmY = 3f;
+    private boolean prostitutkaAm = false, prostitutkaKor = false;
+    private float prostitutkaRot =  0f;
+
     private int koreanEnergy = 100;
     private int americanEnergy = 100;
     private float koreanUpgradeLvl = 0f;
@@ -67,10 +73,12 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     private ArrayList<Texture> koreanMenTexture;
     private ArrayList<Texture> americanMenTexture;
-    private Texture background;
+    private Texture background, prostitutka;
 
     private Label textKoreans, textAmericans, energyKor, energyAm, lvlAmerican, lvlKor;
     private Label.LabelStyle textStyle;
+
+    private Prostitutka prostitutki;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -87,6 +95,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         textStyle.font = font;
 
 
+
+
         koreanMen = new ArrayList<KoreanManEntity>();
         americanMen = new ArrayList<AmericanManEntity>();
         koreanMenTexture = new ArrayList<Texture>();
@@ -97,6 +107,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         camera.translate(0, 1);
 
         getTextures();
+        prostitutki = new Prostitutka(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 2f, 2f);
+
         Gdx.input.setInputProcessor(this);
 
         sp = new SpriteBatch();
@@ -139,6 +151,22 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         stage.addActor(lvlAmerican);
         stage.addActor(energyKor);
         stage.addActor(energyAm);
+
+        if(prostitutkaAm){
+
+            prostitutki.setX(prostitutkaAmX);
+            stage.addActor(prostitutki);
+            if(prostitutkaAmX>7f){
+                prostitutkaAmX = 5f;
+                prostitutki.setBodyX(prostitutkaAmX);
+                prostitutki.remove();
+                prostitutkaAm = false;
+            }else{
+
+                prostitutkaAmX+=0.02f;
+                prostitutki.setX(prostitutkaAmX);
+            }
+        }
 
         timerKoreanSpawn += delta;
         if (timerKoreanSpawn >= koreanSpawnCooldawn) {
@@ -212,6 +240,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
         lvlAmerican.remove();
         lvlKor.remove();
+
+        prostitutki.remove();
     }
 
     private void getTextures() {
@@ -223,6 +253,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         americanMenTexture.add((Texture) game.getManager().get("imgs/am1.png"));
         americanMenTexture.add((Texture) game.getManager().get("imgs/am2.png"));
 
+        prostitutka = game.getManager().get("imgs/prostitutki.png");
         background = game.getManager().get("imgs/bg1.png");
     }
 
@@ -292,17 +323,20 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             }
         }
         if (keycode == Input.Keys.W) {
-            if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
-                americanEnergy -= (secondSkillCost - americanUpgradeLvl);
-
-                for (int i = 0; i < secondSkillCost; i++) {
-                    americanMen.add(
-                            new AmericanManEntity(americanMenTexture.get(
-                                    generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
-                            )
-                    );
-                    stage.addActor(americanMen.get(americanMen.size() - 1));
+            if(!prostitutkaAm){
+                if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
+                    americanEnergy -= (secondSkillCost - americanUpgradeLvl);
+                    prostitutkaAm = true;
+                    for (int i = 0; i < secondSkillCost; i++) {
+                        americanMen.add(
+                                new AmericanManEntity(americanMenTexture.get(
+                                        generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+                                )
+                        );
+                        stage.addActor(americanMen.get(americanMen.size() - 1));
+                    }
                 }
+
             }
             // + americans
         }
