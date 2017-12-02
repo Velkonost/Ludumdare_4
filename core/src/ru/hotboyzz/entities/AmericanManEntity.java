@@ -1,4 +1,4 @@
-package ru.hotboyzz.desktop.entities;
+package ru.hotboyzz.entities;
 
 /**
  * @author Velkonost

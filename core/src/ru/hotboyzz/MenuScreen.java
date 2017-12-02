@@ -1,4 +1,4 @@
-package ru.hotboyzz.desktop;
+package ru.hotboyzz;
 
 /**
  * @author Velkonost
