@@ -1,6 +1,8 @@
 package ru.hotboyzz;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 /**
  * @author Velkonost
  */
-public class GameScreen extends BaseScreen {
+public class GameScreen extends BaseScreen implements InputProcessor {
 
 //    oY : 0-7
 //    oX : 0-13
@@ -39,9 +41,22 @@ public class GameScreen extends BaseScreen {
 
     private float timerKoreanSpawn = 0;
     private float timerAmericanSpawn = 0;
-    private static final float KOREAN_SPAWN_COOLDAWN = 0.5f;
-    private static final float AMERICAN_SPAWN_COOLDAWN = 0.5f;
+    private float timerAddEnergy = 0;
+    private float timerUpSpawnSpeed = 0;
 
+    private float koreanSpawnCooldawn = 2.5f;
+    private float americanSpawnCooldawn = 1.5f;
+    private float upSpawnSpeedCooldawn = 1f;
+    private static final float ENERGY_COOLDAWN = 1f;
+
+    private int koreanEnergy = 100;
+    private int americanEnergy = 100;
+    private float koreanUpgradeLvl = 0f;
+    private float americanUpgradeLvl = 0f;
+
+    private float firstSkillCost = 30f;
+    private float secondSkillCost = 30f;
+    private float thirdSkillCost = 30f;
 
     private ArrayList<Texture> koreanMenTexture;
     private ArrayList<Texture> americanMenTexture;
@@ -77,7 +92,7 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         timerKoreanSpawn += delta;
-        if (timerKoreanSpawn >= KOREAN_SPAWN_COOLDAWN) {
+        if (timerKoreanSpawn >= koreanSpawnCooldawn) {
             koreanMen.add(
                     new KoreanManEntity(koreanMenTexture.get(
                             generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
@@ -89,7 +104,7 @@ public class GameScreen extends BaseScreen {
         }
 
         timerAmericanSpawn += delta;
-        if (timerAmericanSpawn >= AMERICAN_SPAWN_COOLDAWN) {
+        if (timerAmericanSpawn >= americanSpawnCooldawn) {
             americanMen.add(
                     new AmericanManEntity(americanMenTexture.get(
                             generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
@@ -98,6 +113,28 @@ public class GameScreen extends BaseScreen {
 
             stage.addActor(americanMen.get(americanMen.size() - 1));
             timerAmericanSpawn = 0;
+        }
+
+        timerAddEnergy += delta;
+        if (timerAddEnergy >= ENERGY_COOLDAWN) {
+            americanEnergy += 1;
+            koreanEnergy += 1;
+
+            if (americanEnergy > 100) americanEnergy = 100;
+            if (koreanEnergy > 100) koreanEnergy = 100;
+
+            timerAddEnergy = 0;
+        }
+
+        timerUpSpawnSpeed += delta;
+        if (timerUpSpawnSpeed >= upSpawnSpeedCooldawn) {
+            americanSpawnCooldawn -= 0.1f;
+            koreanSpawnCooldawn -= 0.1f;
+
+            if (americanSpawnCooldawn <= 0.2f) americanSpawnCooldawn = 0.2f;
+            if (koreanSpawnCooldawn <= 0.1f) koreanSpawnCooldawn = 0.1f;
+
+            timerUpSpawnSpeed = 0;
         }
 
         stage.act();
@@ -165,5 +202,100 @@ public class GameScreen extends BaseScreen {
         stage.dispose();
         world.dispose();
         renderer.dispose();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.Q) {
+            if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
+                americanEnergy -= (firstSkillCost - americanUpgradeLvl);
+
+                // - koreans
+            }
+        }
+        if (keycode == Input.Keys.W) {
+            if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
+                americanEnergy -= (secondSkillCost - americanUpgradeLvl);
+            }
+            // + americans
+        }
+        if (keycode == Input.Keys.E) {
+            if (americanEnergy >= (thirdSkillCost - americanUpgradeLvl)) {
+                americanEnergy -= (thirdSkillCost - americanUpgradeLvl);
+            }
+            // rand american
+        }
+        if (keycode == Input.Keys.R) {
+            // up americans skills
+            if (americanEnergy >= 50) {
+                americanEnergy -= 50;
+                americanUpgradeLvl += 0.1f;
+            }
+        }
+
+
+        if (keycode == Input.Keys.A) {
+            if (koreanEnergy >= (firstSkillCost - koreanUpgradeLvl)) {
+                koreanEnergy -= (firstSkillCost - koreanUpgradeLvl);
+            }
+            // - americans
+        }
+        if (keycode == Input.Keys.S) {
+            if (koreanEnergy >= (secondSkillCost - koreanUpgradeLvl)) {
+                koreanEnergy -= (secondSkillCost - koreanUpgradeLvl);
+            }
+            // + koreans
+        }
+        if (keycode == Input.Keys.D) {
+            if (koreanEnergy >= (thirdSkillCost - koreanUpgradeLvl)) {
+                koreanEnergy -= (thirdSkillCost - koreanUpgradeLvl);
+            }
+            // rand koreans
+        }
+        if (keycode == Input.Keys.F) {
+            // up koreans skills
+            if (koreanEnergy >= 50) {
+                koreanEnergy -= 50;
+                koreanUpgradeLvl += 0.1f;
+            }
+        }
+
+
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
