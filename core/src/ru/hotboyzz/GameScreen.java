@@ -37,6 +37,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     BitmapFont font;
     SpriteBatch sp;
 
+    private WinScreen winScreen;
+    private LoseScreen loseScreen;
+
     private ArrayList<KoreanManEntity> koreanMen;
     private ArrayList<AmericanManEntity> americanMen;
 
@@ -44,6 +47,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private float timerAmericanSpawn = 0;
     private float timerAddEnergy = 0;
     private float timerUpSpawnSpeed = 0;
+
+    private float timerAllGame = 0;
 
     private float koreanSpawnCooldawn = 1.5f;
     private float americanSpawnCooldawn = 2.5f;
@@ -101,6 +106,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
 
+        loseScreen = new LoseScreen(game);
+        winScreen = new WinScreen(game);
 
         koreanMen = new ArrayList<KoreanManEntity>();
         americanMen = new ArrayList<AmericanManEntity>();
@@ -127,7 +134,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         addTextOnScreen();
-
+        timerAllGame+=delta;
         if(applesAmDrop){
             if(!isApplesAmShowed){
                 for(int i = 0; i<10; i++){
@@ -556,9 +563,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     break;
                 case 5:
                     System.out.println(5);
+                    game.setScreen(new LoseScreen(game, timerAllGame));
                     //lose
                     break;
                 case 6:
+                    game.setScreen(winScreen);
                     System.out.println(6);
                     //win
                     break;
