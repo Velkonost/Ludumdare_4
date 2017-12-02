@@ -89,7 +89,6 @@ public class GameScreen extends BaseScreen {
 
     private void getTextures() {
         koreanMenTexture.add((Texture) game.getManager().get("imgs/kor1.png"));
-        koreanMenTexture.add((Texture) game.getManager().get("imgs/kor21.png"));
         koreanMenTexture.add((Texture) game.getManager().get("imgs/kor3.png"));
         koreanMenTexture.add((Texture) game.getManager().get("imgs/kor4.png"));
         koreanMenTexture.add((Texture) game.getManager().get("imgs/kor5.png"));
