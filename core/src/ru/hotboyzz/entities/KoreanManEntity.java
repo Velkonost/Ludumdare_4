@@ -56,7 +56,6 @@ public class KoreanManEntity extends Actor {
             setX(7f * PIXELS_IN_METER);
         }
         if (getX() / PIXELS_IN_METER >= 13.5f) {
-            System.out.println("COMMON");
             setX(13.5f * PIXELS_IN_METER);
         }
         if (getY() / PIXELS_IN_METER <= 0f) {

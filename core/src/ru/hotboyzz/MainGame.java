@@ -22,10 +22,11 @@ public class MainGame extends Game {
         manager.load("badlogic.jpg", Texture.class);
         manager.load("imgs/bg1.png", Texture.class);
         manager.load("imgs/kor1.png", Texture.class);
-        manager.load("imgs/kor21.png", Texture.class);
+//        manager.load("imgs/kor21.png", Texture.class);
         manager.load("imgs/kor3.png", Texture.class);
         manager.load("imgs/kor4.png", Texture.class);
         manager.load("imgs/kor5.png", Texture.class);
+        manager.load("imgs/luckylee.png", Texture.class);
 
         manager.finishLoading();
 
