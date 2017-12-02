@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ru.hotboyzz.entities.AmericanManEntity;
 import ru.hotboyzz.entities.KoreanManEntity;
@@ -62,6 +63,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private ArrayList<Texture> americanMenTexture;
     private Texture background;
 
+    private Label textKoreans, textAmericans, energyKor, energyAm, lvlAmerican, lvlKor;
+    private Label.LabelStyle textStyle;
+
     public GameScreen(MainGame game) {
         this.game = game;
 
@@ -72,6 +76,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     @Override
     public void show() {
+        font = new BitmapFont();
+        textStyle = new Label.LabelStyle();
+        textStyle.font = font;
+
+
         koreanMen = new ArrayList<KoreanManEntity>();
         americanMen = new ArrayList<AmericanManEntity>();
         koreanMenTexture = new ArrayList<Texture>();
@@ -90,6 +99,39 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
+        textKoreans = new Label("Koreans: "+koreanMen.size(),textStyle);
+        textAmericans = new Label("Americans: "+americanMen.size(),textStyle);
+        lvlAmerican = new Label("American level: "+americanMen.size(),textStyle);
+        lvlKor = new Label("Korean level:  "+americanMen.size(),textStyle);
+        energyAm = new Label("American energy:  "+americanMen.size(),textStyle);
+        energyKor = new Label("Korean energy:  "+americanMen.size(),textStyle);
+
+        textKoreans.setX(Gdx.graphics.getWidth()-150);
+        textKoreans.setY(Gdx.graphics.getHeight()-25);
+
+        lvlKor.setX(Gdx.graphics.getWidth()-150);
+        lvlKor.setY(Gdx.graphics.getHeight()-40);
+
+        energyKor.setX(Gdx.graphics.getWidth()-150);
+        energyKor.setY(Gdx.graphics.getHeight()-55);
+
+        textAmericans.setX(50);
+        textAmericans.setY(Gdx.graphics.getHeight()-25);
+
+        lvlAmerican.setX(50);
+        lvlAmerican.setY(Gdx.graphics.getHeight()-40);
+
+        energyAm.setX(50);
+        energyAm.setY(Gdx.graphics.getHeight()-55);
+
+        stage.addActor(textKoreans);
+        stage.addActor(textAmericans);
+        stage.addActor(lvlKor);
+        stage.addActor(lvlAmerican);
+        stage.addActor(energyKor);
+        stage.addActor(energyAm);
 
         timerKoreanSpawn += delta;
         if (timerKoreanSpawn >= koreanSpawnCooldawn) {
@@ -137,14 +179,32 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             timerUpSpawnSpeed = 0;
         }
 
+
+
+
         stage.act();
         stage.getBatch().begin();
+
         stage.getBatch().draw(background, 0, 0, 1280, 720);
         stage.getBatch().end();
         world.step(delta, 6, 2);
         camera.update();
         renderer.render(world, camera.combined);
+//        stage.getBatch().begin();
+//        font.getData().setScale(1, 1);
+//        font.draw(stage.getBatch(), "Koreans: " + koreanMen.size(), Gdx.graphics.getWidth()-200,  Gdx.graphics.getHeight()-25);
+//        font.draw(stage.getBatch(), "Americans: " + americanMen.size(), 100,  Gdx.graphics.getHeight()-25);
+//        stage.getBatch().end();
         stage.draw();
+
+        textAmericans.remove();
+        textKoreans.remove();
+
+        energyKor.remove();
+        energyAm.remove();
+
+        lvlAmerican.remove();
+        lvlKor.remove();
     }
 
     private void getTextures() {
