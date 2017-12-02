@@ -17,8 +17,10 @@ public class AppleEntity extends Actor {
     private Fixture fixture;
     float width, height, x, y;
     private float xVelocity;
+    float startAngle = 0f;
 
-    public float speed = 0.000001f;
+
+    public float speed = 2f;
     public AppleEntity(Texture texture, World world, float x, float y, float width, float height){
         this.texture = texture;
 
@@ -33,7 +35,7 @@ public class AppleEntity extends Actor {
 
         BodyDef def = new BodyDef();
         def.position.set(x, y);
-        def.type = BodyDef.BodyType.DynamicBody;
+        def.type = BodyDef.BodyType.KinematicBody;
 
         body = world.createBody(def);
 //        body.setFixedRotation(true);
@@ -43,7 +45,7 @@ public class AppleEntity extends Actor {
 
         body.setFixedRotation(false);
 
-        xVelocity = -5f + (int)(Math.random() * ((5 + 5f) + 1));
+        xVelocity = 0;
 
         box.dispose();
 
@@ -53,9 +55,10 @@ public class AppleEntity extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         body.setLinearVelocity(xVelocity, -speed);
-        setPosition((body.getPosition().x) * PIXELS_IN_METER, (body.getPosition().y) * PIXELS_IN_METER);
-        setRotation(90);
+        setPosition((body.getPosition().x) * PIXELS_IN_METER, (body.getPosition().y) * PIXELS_IN_METER);;
         batch.draw(texture, getX(), getY(), width  * PIXELS_IN_METER, height  * PIXELS_IN_METER);
+        body.setTransform(body.getPosition().x, body.getPosition().y, (float)(startAngle * 3.14/180));
+        startAngle += 10f;
 //        batch.draw(texture, getX(), getY(), (getWidth()) / 2, (getHeight()) / 2, getWidth(), getHeight(), 1,
 //                1, 0, 1, 1, 900, 900, false, false);
     }

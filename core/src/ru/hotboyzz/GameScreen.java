@@ -80,9 +80,10 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     private ProstitutkaEntity prostitutki;
     private boolean isProstitutkaShowed = false;
-    private boolean isApplesShowed = false, applesDrop = false;
+    private boolean isApplesKorShowed = false, applesKorDrop = false;
+    private boolean isApplesAmShowed = false, applesAmDrop = false;
 
-    private ArrayList<AppleEntity> apples;
+    private ArrayList<AppleEntity> applesAm, applesKor;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -104,7 +105,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         koreanMenTexture = new ArrayList<Texture>();
         americanMenTexture = new ArrayList<Texture>();
 
-        apples = new ArrayList<AppleEntity>();
+        applesAm = new ArrayList<AppleEntity>();
+        applesKor = new ArrayList<AppleEntity>();
 
         renderer = new Box2DDebugRenderer();
         camera = new OrthographicCamera(32, 18);
@@ -124,16 +126,83 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
         addTextOnScreen();
 
-        if(applesDrop){
-            if(!isApplesShowed){
+        if(applesAmDrop){
+            if(!isApplesAmShowed){
                 for(int i = 0; i<10; i++){
-                    if(generateRandomNum(3)==1) {
-                        apples.add(new AppleEntity(appleGold, world, generateRandomNum(6), 1, 0.5f, 0.5f));
+                    switch (generateRandomNum(1, 3)){
+                        case 1:
+                            applesAm.add(new AppleEntity(appleGold, world, generateRandomNum(1,6), 6f, 0.5f, 0.5f));
+                            break;
+                        case 2:
+                            applesAm.add(new AppleEntity(appleRed, world, generateRandomNum(1,6), 6f, 0.5f, 0.5f));
+                            break;
+                        case 3:
+                            applesAm.add(new AppleEntity(appleBlue, world, generateRandomNum(1,6), 6f, 0.5f, 0.5f));
+                            break;
                     }
                 }
+                isApplesAmShowed = true;
             }
             for(int i = 0; i<10; i++){
-                stage.addActor(apples.get(i));
+                stage.addActor(applesAm.get(i));
+            }
+
+            for(int i = 0; i<10; i++){
+                if(applesAm.get(i).getY()<7){
+                    applesAm.get(i).remove();
+                    applesAm.clear();
+                    applesAmDrop = false;
+                    isApplesAmShowed = false;
+                    for (int j = 0; j < 100; j++) {
+                        americanMen.add(
+                                new AmericanManEntity(koreanMenTexture.get(
+                                        generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                                )
+                        );
+                        stage.addActor(koreanMen.get(koreanMen.size() - 1));
+                    }
+                    break;
+                }
+            }
+        }
+
+        if(applesKorDrop){
+            if(!isApplesKorShowed){
+                for(int i = 0; i<10; i++){
+                    switch (generateRandomNum(1,3)){
+                        case 1:
+                            applesKor.add(new AppleEntity(appleGold, world, generateRandomNum(7,13), 6f, 0.5f, 0.5f));
+                            break;
+                        case 2:
+                            applesKor.add(new AppleEntity(appleRed, world, generateRandomNum(7,13), 6f, 0.5f, 0.5f));
+                            break;
+                        case 3:
+                            applesKor.add(new AppleEntity(appleBlue, world, generateRandomNum(7,13), 6f, 0.5f, 0.5f));
+                            break;
+                    }
+                }
+                isApplesKorShowed = true;
+            }
+            for(int i = 0; i<10; i++){
+                stage.addActor(applesKor.get(i));
+            }
+
+            for(int i = 0; i<10; i++){
+                if(applesKor.get(i).getY()<7){
+                    applesKor.get(i).remove();
+                    applesKor.clear();
+                    applesKorDrop = false;
+                    isApplesKorShowed = false;
+                    for (int j = 0; j < 100; j++) {
+                        koreanMen.add(
+                                new KoreanManEntity(koreanMenTexture.get(
+                                        generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                                )
+                        );
+                        stage.addActor(koreanMen.get(koreanMen.size() - 1));
+                    }
+                    break;
+                }
             }
         }
 
@@ -420,16 +489,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         if (americanEnergy >= (thirdSkillCost - americanUpgradeLvl)) {
             americanEnergy -= (thirdSkillCost - americanUpgradeLvl);
             switch (generateRandomSkillNum()) {
+
                 case 1:
+                    applesKorDrop = true;
                     System.out.println(1);
-                    for (int i = 0; i < 100; i++) {
-                        koreanMen.add(
-                                new KoreanManEntity(koreanMenTexture.get(
-                                        generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
-                                )
-                        );
-                        stage.addActor(koreanMen.get(koreanMen.size() - 1));
-                    }
+
                     break;
                 case 2:
                     System.out.println(2);
@@ -451,6 +515,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     }
                     break;
                 case 4:
+                    applesAmDrop = true;
                     System.out.println(4);
                     for (int i = 0; i < 100; i++) {
                         americanMen.add(
@@ -480,19 +545,19 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void useThirdSkillKorean() {
-        applesDrop = true;
         if (koreanEnergy >= (thirdSkillCost - koreanUpgradeLvl)) {
             koreanEnergy -= (thirdSkillCost - koreanUpgradeLvl);
 
             switch (generateRandomSkillNum()) {
                 case 1:
-                    applesDrop = true;
+                    applesAmDrop = true;
                     break;
                 case 2:
                     break;
                 case 3:
                     break;
                 case 4:
+                    applesKorDrop = true;
                     break;
                 case 5:
                     break;
@@ -530,8 +595,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         return (1 + (int)(Math.random() * 8));
     }
 
-    private int generateRandomNum(int r){
-        return (1 + (int)(Math.random() * r));
+    private int generateRandomNum(int l, int r){
+        return (l + (int)(Math.random() * r));
     }
 
 
