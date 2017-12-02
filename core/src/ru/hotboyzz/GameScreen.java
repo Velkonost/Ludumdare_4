@@ -217,7 +217,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
         if(prostitutkaAm){
             if (!isProstitutkaShowed) {
-                prostitutki = new ProstitutkaEntity(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 2f, 2f);
+                prostitutki = new ProstitutkaEntity(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 3f, 3f);
                 isProstitutkaShowed = true;
             }
             stage.addActor(prostitutki);
