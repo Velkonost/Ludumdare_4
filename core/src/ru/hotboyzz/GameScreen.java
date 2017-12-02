@@ -122,6 +122,125 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        addTextOnScreen();
+
+        if(applesDrop){
+            if(!isApplesShowed){
+                for(int i = 0; i<10; i++){
+                    if(generateRandomNum(3)==1) {
+                        apples.add(new AppleEntity(appleGold, world, generateRandomNum(6), 1, 0.5f, 0.5f));
+                    }
+                }
+            }
+            for(int i = 0; i<10; i++){
+                stage.addActor(apples.get(i));
+            }
+        }
+
+        if(prostitutkaAm){
+            if (!isProstitutkaShowed) {
+                prostitutki = new ProstitutkaEntity(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 2f, 2f);
+                isProstitutkaShowed = true;
+            }
+            stage.addActor(prostitutki);
+            if(prostitutkaAmX > 7f){
+                prostitutkaAmX = 5f;
+                prostitutki.remove();
+                prostitutkaAm = false;
+                isProstitutkaShowed = false;
+                int min = Math.min(koreanMen.size(), americanFirstSkillAmount);
+                for (int i = 0; i < min; i++) {
+                    koreanMen.get(0).addAction(Actions.removeActor());
+                    koreanMen.remove(0);
+                }
+            } else {
+                prostitutkaAmX += 0.02f;
+            }
+        }
+
+        timerKoreanSpawn += delta;
+        if (timerKoreanSpawn >= koreanSpawnCooldawn) {
+            spawnKorean();
+        }
+
+        timerAmericanSpawn += delta;
+        if (timerAmericanSpawn >= americanSpawnCooldawn) {
+            spawnAmerican();
+        }
+
+        timerAddEnergy += delta;
+        if (timerAddEnergy >= ENERGY_COOLDAWN) {
+            addEnergy();
+        }
+
+        timerUpSpawnSpeed += delta;
+        if (timerUpSpawnSpeed >= upSpawnSpeedCooldawn) {
+            reduceSpawnCooldawn();
+        }
+
+        stage.act();
+        stage.getBatch().begin();
+
+        stage.getBatch().draw(background, 0, 0, 1280, 720);
+        stage.getBatch().end();
+        world.step(delta, 6, 2);
+        camera.update();
+        renderer.render(world, camera.combined);
+        stage.draw();
+
+        textAmericans.remove();
+        textKoreans.remove();
+
+        energyKor.remove();
+        energyAm.remove();
+
+        lvlAmerican.remove();
+        lvlKor.remove();
+    }
+
+    private void spawnKorean() {
+        koreanMen.add(
+                new KoreanManEntity(koreanMenTexture.get(
+                        generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                )
+        );
+
+        stage.addActor(koreanMen.get(koreanMen.size() - 1));
+        timerKoreanSpawn = 0;
+    }
+
+    private void spawnAmerican() {
+        americanMen.add(
+                new AmericanManEntity(americanMenTexture.get(
+                        generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+                )
+        );
+
+        stage.addActor(americanMen.get(americanMen.size() - 1));
+        timerAmericanSpawn = 0;
+    }
+
+    private void addEnergy() {
+        americanEnergy += 1;
+        koreanEnergy += 1;
+
+        if (americanEnergy > 100) americanEnergy = 100;
+        if (koreanEnergy > 100) koreanEnergy = 100;
+
+        timerAddEnergy = 0;
+    }
+
+    private void reduceSpawnCooldawn() {
+        americanSpawnCooldawn -= 0.1f;
+        koreanSpawnCooldawn -= 0.1f;
+
+        if (americanSpawnCooldawn <= 0.2f) americanSpawnCooldawn = 0.2f;
+        if (koreanSpawnCooldawn <= 0.1f) koreanSpawnCooldawn = 0.1f;
+
+        timerUpSpawnSpeed = 0;
+    }
+
+    private void addTextOnScreen() {
         textKoreans = new Label("Koreans: " + koreanMen.size(),textStyle);
         textAmericans = new Label("Americans: " + americanMen.size(),textStyle);
         lvlAmerican = new Label("American level: " + americanUpgradeLvl,textStyle);
@@ -153,111 +272,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         stage.addActor(lvlAmerican);
         stage.addActor(energyKor);
         stage.addActor(energyAm);
-
-        if(applesDrop){
-            if(!isApplesShowed){
-                for(int i = 0; i<10; i++){
-                    if(generateRandomNum(3)==1) {
-                        apples.add(new AppleEntity(appleGold, world, generateRandomNum(6), 1, 0.5f, 0.5f));
-                    }
-                }
-            }
-            for(int i = 0; i<10; i++){
-                stage.addActor(apples.get(i));
-            }
-        }
-
-        if(prostitutkaAm){
-            if (!isProstitutkaShowed) {
-                prostitutki = new ProstitutkaEntity(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 2f, 2f);
-                isProstitutkaShowed = true;
-            }
-            stage.addActor(prostitutki);
-            if(prostitutkaAmX > 7f){
-                prostitutkaAmX = 5f;
-                prostitutki.remove();
-                prostitutkaAm = false;
-                isProstitutkaShowed = false;
-            } else {
-                prostitutkaAmX += 0.02f;
-//                prostitutki.setBodyX(0f);
-            }
-        }
-
-        timerKoreanSpawn += delta;
-        if (timerKoreanSpawn >= koreanSpawnCooldawn) {
-            koreanMen.add(
-                    new KoreanManEntity(koreanMenTexture.get(
-                            generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
-                    )
-            );
-
-            stage.addActor(koreanMen.get(koreanMen.size() - 1));
-            timerKoreanSpawn = 0;
-        }
-
-        timerAmericanSpawn += delta;
-        if (timerAmericanSpawn >= americanSpawnCooldawn) {
-            americanMen.add(
-                    new AmericanManEntity(americanMenTexture.get(
-                            generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
-                    )
-            );
-
-            stage.addActor(americanMen.get(americanMen.size() - 1));
-            timerAmericanSpawn = 0;
-        }
-
-        timerAddEnergy += delta;
-        if (timerAddEnergy >= ENERGY_COOLDAWN) {
-            americanEnergy += 1;
-            koreanEnergy += 1;
-
-            if (americanEnergy > 100) americanEnergy = 100;
-            if (koreanEnergy > 100) koreanEnergy = 100;
-
-            timerAddEnergy = 0;
-        }
-
-        timerUpSpawnSpeed += delta;
-        if (timerUpSpawnSpeed >= upSpawnSpeedCooldawn) {
-            americanSpawnCooldawn -= 0.1f;
-            koreanSpawnCooldawn -= 0.1f;
-
-            if (americanSpawnCooldawn <= 0.2f) americanSpawnCooldawn = 0.2f;
-            if (koreanSpawnCooldawn <= 0.1f) koreanSpawnCooldawn = 0.1f;
-
-            timerUpSpawnSpeed = 0;
-        }
-
-
-
-
-        stage.act();
-        stage.getBatch().begin();
-
-        stage.getBatch().draw(background, 0, 0, 1280, 720);
-        stage.getBatch().end();
-        world.step(delta, 6, 2);
-        camera.update();
-        renderer.render(world, camera.combined);
-//        stage.getBatch().begin();
-//        font.getData().setScale(1, 1);
-//        font.draw(stage.getBatch(), "Koreans: " + koreanMen.size(), Gdx.graphics.getWidth()-200,  Gdx.graphics.getHeight()-25);
-//        font.draw(stage.getBatch(), "Americans: " + americanMen.size(), 100,  Gdx.graphics.getHeight()-25);
-//        stage.getBatch().end();
-        stage.draw();
-
-        textAmericans.remove();
-        textKoreans.remove();
-
-        energyKor.remove();
-        energyAm.remove();
-
-        lvlAmerican.remove();
-        lvlKor.remove();
-
-//        prostitutki.remove();
     }
 
     private void getTextures() {
@@ -321,7 +335,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         renderer.dispose();
     }
 
-
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.Q) {
@@ -357,28 +370,23 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
                 americanEnergy -= (firstSkillCost - americanUpgradeLvl);
                 prostitutkaAm = true;
-                int min = Math.min(koreanMen.size(), americanFirstSkillAmount);
-                for (int i = 0; i < min; i++) {
-                    koreanMen.get(0).addAction(Actions.removeActor());
-                    koreanMen.remove(0);
-                }
             }
         }
     }
 
     private void useSecondSkillAmerican() {
-        if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
-            americanEnergy -= (secondSkillCost - americanUpgradeLvl);
-
-            for (int i = 0; i < secondSkillCost; i++) {
-                americanMen.add(
-                        new AmericanManEntity(americanMenTexture.get(
-                                generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
-                        )
-                );
-                stage.addActor(americanMen.get(americanMen.size() - 1));
-            }
-        }
+//        if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
+//            americanEnergy -= (secondSkillCost - americanUpgradeLvl);
+//
+//            for (int i = 0; i < secondSkillCost; i++) {
+//                americanMen.add(
+//                        new AmericanManEntity(americanMenTexture.get(
+//                                generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+//                        )
+//                );
+//                stage.addActor(americanMen.get(americanMen.size() - 1));
+//            }
+//        }
     }
 
     private void useFirstSkillKorean() {
@@ -394,18 +402,18 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void useSecondSkillKorean() {
-        if (koreanEnergy >= (secondSkillCost - koreanUpgradeLvl)) {
-            koreanEnergy -= (secondSkillCost - koreanUpgradeLvl);
-
-            for (int i = 0; i < secondSkillCost; i++) {
-                koreanMen.add(
-                        new KoreanManEntity(koreanMenTexture.get(
-                                generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
-                        )
-                );
-                stage.addActor(koreanMen.get(koreanMen.size() - 1));
-            }
-        }
+//        if (koreanEnergy >= (secondSkillCost - koreanUpgradeLvl)) {
+//            koreanEnergy -= (secondSkillCost - koreanUpgradeLvl);
+//
+//            for (int i = 0; i < secondSkillCost; i++) {
+//                koreanMen.add(
+//                        new KoreanManEntity(koreanMenTexture.get(
+//                                generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+//                        )
+//                );
+//                stage.addActor(koreanMen.get(koreanMen.size() - 1));
+//            }
+//        }
     }
 
     private void useThirdSkillAmerican() {
@@ -523,7 +531,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private int generateRandomNum(int r){
-        return (1+ (int)(Math.random()*r));
+        return (1 + (int)(Math.random() * r));
     }
 
 
