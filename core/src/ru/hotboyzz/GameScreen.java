@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import ru.hotboyzz.entities.AmericanManEntity;
 import ru.hotboyzz.entities.KoreanManEntity;
@@ -44,8 +45,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private float timerAddEnergy = 0;
     private float timerUpSpawnSpeed = 0;
 
-    private float koreanSpawnCooldawn = 2.5f;
-    private float americanSpawnCooldawn = 1.5f;
+    private float koreanSpawnCooldawn = 1.5f;
+    private float americanSpawnCooldawn = 2.5f;
     private float upSpawnSpeedCooldawn = 1f;
     private static final float ENERGY_COOLDAWN = 1f;
 
@@ -57,6 +58,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private float firstSkillCost = 30f;
     private float secondSkillCost = 30f;
     private float thirdSkillCost = 30f;
+
+    private int americanFirstSkillAmount = 10;
+    private int americanSecondSkillAmount = 10;
+    private int koreanFirstSkillAmount = 10;
+    private int koreanSecondSkillAmount = 10;
 
     private ArrayList<Texture> koreanMenTexture;
     private ArrayList<Texture> americanMenTexture;
@@ -82,6 +88,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         camera.translate(0, 1);
 
         getTextures();
+        Gdx.input.setInputProcessor(this);
 
         sp = new SpriteBatch();
     }
@@ -206,21 +213,36 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.Q) {
+
             if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
                 americanEnergy -= (firstSkillCost - americanUpgradeLvl);
 
+                int min = Math.min(koreanMen.size(), americanFirstSkillAmount);
+                for (int i = 0; i < min; i++) {
+                    koreanMen.get(0).addAction(Actions.removeActor());
+                    koreanMen.remove(0);
+                }
                 // - koreans
             }
         }
         if (keycode == Input.Keys.W) {
             if (americanEnergy >= (secondSkillCost - americanUpgradeLvl)) {
                 americanEnergy -= (secondSkillCost - americanUpgradeLvl);
+
+                for (int i = 0; i < secondSkillCost; i++) {
+                    americanMen.add(
+                            new AmericanManEntity(americanMenTexture.get(
+                                    generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
+                            )
+                    );
+                    stage.addActor(americanMen.get(americanMen.size() - 1));
+                }
             }
             // + americans
         }
@@ -234,20 +256,34 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             // up americans skills
             if (americanEnergy >= 50) {
                 americanEnergy -= 50;
-                americanUpgradeLvl += 0.1f;
+                americanUpgradeLvl += 1f;
             }
         }
-
 
         if (keycode == Input.Keys.A) {
             if (koreanEnergy >= (firstSkillCost - koreanUpgradeLvl)) {
                 koreanEnergy -= (firstSkillCost - koreanUpgradeLvl);
+
+                int min = Math.min(americanMen.size(), koreanFirstSkillAmount);
+                for (int i = 0; i < min; i++) {
+                    americanMen.get(0).addAction(Actions.removeActor());
+                    americanMen.remove(0);
+                }
             }
             // - americans
         }
         if (keycode == Input.Keys.S) {
             if (koreanEnergy >= (secondSkillCost - koreanUpgradeLvl)) {
                 koreanEnergy -= (secondSkillCost - koreanUpgradeLvl);
+
+                for (int i = 0; i < secondSkillCost; i++) {
+                    koreanMen.add(
+                            new KoreanManEntity(koreanMenTexture.get(
+                                    generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                            )
+                    );
+                    stage.addActor(koreanMen.get(koreanMen.size() - 1));
+                }
             }
             // + koreans
         }
@@ -261,11 +297,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             // up koreans skills
             if (koreanEnergy >= 50) {
                 koreanEnergy -= 50;
-                koreanUpgradeLvl += 0.1f;
+                koreanUpgradeLvl += 1f;
             }
         }
-
-
         return true;
     }
 
