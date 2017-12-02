@@ -37,6 +37,7 @@ public class MainGame extends Game {
         manager.load("imgs/rocket.png", Texture.class);
         manager.load("imgs/wonScreen.png", Texture.class);
         manager.load("imgs/lostScreen.png", Texture.class);
+        manager.load("imgs/redbull.png", Texture.class);
 
         manager.finishLoading();
 

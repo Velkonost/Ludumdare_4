@@ -89,6 +89,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private boolean isRocketsShowed = false;
     private boolean isRockets = false;
     private boolean isApplesShowed = false, applesDrop = false;
+    private boolean isRedbullShowed = false, showRedbull = false;
+    private float redbullTimer = 0;
+    private RedbullEntity redbullEntity;
+    private Texture redbullTexture;
+    private float redbullX = 0, redbullY = 0;
 
     private ArrayList<AppleEntity> applesAm, applesKor;
 
@@ -215,6 +220,20 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             }
         }
 
+        if(showRedbull){
+            redbullTimer+=delta;
+            if(!isRedbullShowed){
+                redbullEntity = new RedbullEntity(redbullTexture, world, redbullX, redbullY, 4f, 4f);
+                isRedbullShowed = true;
+            }
+            stage.addActor(redbullEntity);
+            if(redbullTimer>3){
+                redbullEntity.remove();
+                showRedbull = false;
+                isRedbullShowed = false;
+                redbullTimer = 0;
+            }
+        }
         if(prostitutkaAm){
             if (!isProstitutkaShowed) {
                 prostitutki = new ProstitutkaEntity(prostitutka, world, prostitutkaAmX, prostitutkaAmY, 3f, 3f);
@@ -388,6 +407,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         appleBlue = game.getManager().get("imgs/apple3.png");
         appleGold = game.getManager().get("imgs/apple2.png");
         appleRed = game.getManager().get("imgs/apple1.png");
+        redbullTexture = game.getManager().get("imgs/redbull.png");
 
         rocket = game.getManager().get("imgs/rocket.png");
     }
@@ -535,10 +555,20 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     //win
                     break;
                 case 7:
-                    americanEnergy += 60;
+                    if(!showRedbull) {
+                        americanEnergy += 60;
+                        showRedbull = true;
+                        redbullX = 2f;
+                        redbullY = 3f;
+                    }
                     break;
                 case 8:
-                    koreanEnergy += 60;
+                    if(!showRedbull) {
+                        koreanEnergy += 60;
+                        showRedbull = true;
+                        redbullX = 9f;
+                        redbullY = 3f;
+                    }
                     break;
             }
         }
