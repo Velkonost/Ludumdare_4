@@ -20,6 +20,9 @@ public class KoreanManEntity extends Actor {
     public KoreanManEntity(Texture texture, World world, float x, float y, float width, float height) {
         this.texture = texture;
 
+        this.width = width;
+        this.height = height;
+
         this.world = world;
 //        this.game = game;
         setPosition(x, y);
@@ -32,7 +35,7 @@ public class KoreanManEntity extends Actor {
         body.setFixedRotation(true);
 
         final PolygonShape box = new PolygonShape();
-        box.setAsBox(0.35f, 0.35f);
+        box.setAsBox(0.25f, 0.5f);
 
         fixture = body.createFixture(box, 1000000000);
         fixture.setUserData("koreanMan");
@@ -47,9 +50,24 @@ public class KoreanManEntity extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         setPosition((body.getPosition().x) * PIXELS_IN_METER, (body.getPosition().y) * PIXELS_IN_METER);
-//        batch.draw(texture, getX(), getY(), getWidth(), getHeight());
-        batch.draw(texture, getX(), getY(), (getWidth()) / 2, (getHeight()) / 2, getWidth(), getHeight(), 1,
-                1, 0, 1, 1, 900, 900, false, false);
+//        System.out.println(getX() / PIXELS_IN_METER);
+        if (getX() / PIXELS_IN_METER <= 7f) {
+
+            setX(7f * PIXELS_IN_METER);
+        }
+        if (getX() / PIXELS_IN_METER >= 13.5f) {
+            System.out.println("COMMON");
+            setX(13.5f * PIXELS_IN_METER);
+        }
+        if (getY() / PIXELS_IN_METER <= 0f) {
+            setY(0f * PIXELS_IN_METER);
+        }
+        if (getY() / PIXELS_IN_METER >= 7f) {
+            setY(7f * PIXELS_IN_METER);
+        }
+        batch.draw(texture, getX(), getY(), width  * PIXELS_IN_METER, height  * PIXELS_IN_METER);
+//        batch.draw(texture, getX(), getY(), (getWidth()) / 2, (getHeight()) / 2, getWidth(), getHeight(), 1,
+//                1, 0, 1, 1, 900, 900, false, false);
     }
 
     public void detach() {
