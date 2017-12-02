@@ -171,13 +171,13 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                 for(int i = 0; i<10; i++){
                     switch (generateRandomNum(1,3)){
                         case 1:
-                            applesKor.add(new AppleEntity(appleGold, world, generateRandomNum(7,13), 6f, 0.5f, 0.5f));
+                            applesKor.add(new AppleEntity(appleGold, world, generateRandomNum(7,12), 6f, 0.5f, 0.5f));
                             break;
                         case 2:
-                            applesKor.add(new AppleEntity(appleRed, world, generateRandomNum(7,13), 6f, 0.5f, 0.5f));
+                            applesKor.add(new AppleEntity(appleRed, world, generateRandomNum(7,12), 6f, 0.5f, 0.5f));
                             break;
                         case 3:
-                            applesKor.add(new AppleEntity(appleBlue, world, generateRandomNum(7,13), 6f, 0.5f, 0.5f));
+                            applesKor.add(new AppleEntity(appleBlue, world, generateRandomNum(7,12), 6f, 0.5f, 0.5f));
                             break;
                     }
                 }
