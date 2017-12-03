@@ -20,7 +20,7 @@ public class AppleEntity extends Actor {
     float startAngle = 0f;
 
 
-    public float speed = 2f;
+    public float speed = 1f;
     public AppleEntity(Texture texture, World world, float x, float y, float width, float height){
         this.texture = texture;
 

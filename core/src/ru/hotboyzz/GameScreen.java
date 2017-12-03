@@ -72,10 +72,10 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private float secondSkillCost = 30f;
     private float thirdSkillCost = 30f;
 
-    private int americanFirstSkillAmount = 10;
-    private int americanSecondSkillAmount = 10;
-    private int koreanFirstSkillAmount = 10;
-    private int koreanSecondSkillAmount = 10;
+    private int americanFirstSkillAmount = 50;
+    private int americanSecondSkillAmount = 50;
+    private int koreanFirstSkillAmount = 50;
+    private int koreanSecondSkillAmount = 50;
 
     private ArrayList<Texture> koreanMenTexture;
     private ArrayList<Texture> americanMenTexture;
@@ -115,6 +115,10 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 30;
 
+        Music music5 = Gdx.audio.newMusic(Gdx.files.internal("music/bgaudio.mp3"));
+        music5.setVolume(0.01f);
+        music5.play();
+
 
         font = generator.generateFont(parameter);
 
@@ -150,6 +154,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
         addTextOnScreen();
         timerAllGame+=delta;
+        if(americanMen.size() >= 200 || koreanMen.size() >= 200){
+            game.setScreen(new LoseScreen(game, timerAllGame));
+        }
         if(applesAmDrop){
             if(!isApplesAmShowed){
                 for(int i = 0; i<10; i++){
@@ -179,11 +186,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     isApplesAmShowed = false;
                     for (int j = 0; j < 100; j++) {
                         americanMen.add(
-                                new AmericanManEntity(koreanMenTexture.get(
-                                        generateRandomKoreanImg()), world, generateRandomKoreanX(), generateRandomKoreanY(), 0.5f, 1f
+                                new AmericanManEntity(americanMenTexture.get(
+                                        generateRandomAmericanImg()), world, generateRandomAmericanX(), generateRandomAmericanY(), 0.5f, 1f
                                 )
                         );
-                        stage.addActor(koreanMen.get(koreanMen.size() - 1));
+                        stage.addActor(americanMen.get(americanMen.size() - 1));
                     }
                     break;
                 }
@@ -350,8 +357,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void addEnergy() {
-        americanEnergy += 1;
-        koreanEnergy += 1;
+        americanEnergy += 5;
+        koreanEnergy += 3;
 
         if (americanEnergy > 100) americanEnergy = 100;
         if (koreanEnergy > 100) koreanEnergy = 100;
@@ -363,8 +370,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         americanSpawnCooldawn -= 0.1f;
         koreanSpawnCooldawn -= 0.1f;
 
-        if (americanSpawnCooldawn <= 0.2f) americanSpawnCooldawn = 0.2f;
-        if (koreanSpawnCooldawn <= 0.1f) koreanSpawnCooldawn = 0.1f;
+        if (americanSpawnCooldawn <= 0.3f) americanSpawnCooldawn = 0.3f;
+        if (koreanSpawnCooldawn <= 0.2f) koreanSpawnCooldawn = 0.2f;
 
         timerUpSpawnSpeed = 0;
     }
@@ -526,6 +533,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
                 case 1:
                     applesKorDrop = true;
+                    Music music = Gdx.audio.newMusic(Gdx.files.internal("music/uroj.mp3"));
+                    music.setVolume(1f);
+                    music.play();
                     System.out.println(1);
 
                     break;
@@ -550,6 +560,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     break;
                 case 4:
                     applesAmDrop = true;
+                    Music music3 = Gdx.audio.newMusic(Gdx.files.internal("music/uroj.mp3"));
+                    music3.setVolume(1f);
+                    music3.play();
                     System.out.println(4);
                     for (int i = 0; i < 100; i++) {
                         americanMen.add(
@@ -572,9 +585,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     break;
                 case 7:
                     if(!showRedbull) {
-                        Music music = Gdx.audio.newMusic(Gdx.files.internal("music/redbull.mp3"));
-                        music.setVolume(1f);
-                        music.play();
+                        Music music2 = Gdx.audio.newMusic(Gdx.files.internal("music/redbull.mp3"));
+                        music2.setVolume(1f);
+                        music2.play();
 
 
                         americanEnergy += 60;
@@ -585,9 +598,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     break;
                 case 8:
                     if(!showRedbull) {
-                        Music music = Gdx.audio.newMusic(Gdx.files.internal("music/redbull.mp3"));
-                        music.setVolume(1f);
-                        music.play();
+                        Music music1 = Gdx.audio.newMusic(Gdx.files.internal("music/redbull.mp3"));
+                        music1.setVolume(1f);
+                        music1.play();
 
                         koreanEnergy += 60;
                         showRedbull = true;
