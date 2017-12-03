@@ -263,7 +263,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             }
             stage.addActor(rockets);
             if(rocketX < 2f){
-                rocketX = 3f;
+                rocketX = 10f;
 
                 rockets.remove();
                 isRockets = false;
