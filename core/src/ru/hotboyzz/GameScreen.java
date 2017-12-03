@@ -60,8 +60,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     private float prostitutkaAmX = 5f, prostitutkaAmY = 3f;
     private float rocketX = 10f, rocketY = 3f;
-    private boolean prostitutkaAm = false, prostitutkaKor = false;
-    private float prostitutkaRot =  0f;
+    private boolean prostitutkaAm = false;
 
     private int koreanEnergy = 100;
     private int americanEnergy = 100;
@@ -72,10 +71,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private float secondSkillCost = 30f;
     private float thirdSkillCost = 30f;
 
-    private int americanFirstSkillAmount = 50;
-    private int americanSecondSkillAmount = 50;
+    private int americanFirstSkillAmount = 100;
     private int koreanFirstSkillAmount = 50;
-    private int koreanSecondSkillAmount = 50;
 
     private ArrayList<Texture> koreanMenTexture;
     private ArrayList<Texture> americanMenTexture;
@@ -91,7 +88,6 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     private boolean isApplesAmShowed = false, applesAmDrop = false;
     private boolean isRocketsShowed = false;
     private boolean isRockets = false;
-    private boolean isApplesShowed = false, applesDrop = false;
     private boolean isRedbullShowed = false, showRedbull = false;
     private float redbullTimer = 0;
     private RedbullEntity redbullEntity;
