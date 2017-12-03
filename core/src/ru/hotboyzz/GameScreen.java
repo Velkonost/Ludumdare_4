@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -108,7 +110,14 @@ public class GameScreen extends BaseScreen implements InputProcessor {
 
     @Override
     public void show() {
-        font = new BitmapFont();
+        FileHandle fontFile = Gdx.files.internal("fonts/impact.ttf");
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 30;
+
+
+        font = generator.generateFont(parameter);
+
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
 
@@ -252,7 +261,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     koreanMen.remove(0);
                 }
             } else {
-                prostitutkaAmX += 0.02f;
+                prostitutkaAmX += 0.007f;
             }
         }
 
@@ -368,23 +377,23 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         energyAm = new Label("American energy:  " + americanEnergy,textStyle);
         energyKor = new Label("Korean energy:  " + koreanEnergy,textStyle);
 
-        textKoreans.setX(Gdx.graphics.getWidth()-150);
-        textKoreans.setY(Gdx.graphics.getHeight()-25);
+        textKoreans.setX(Gdx.graphics.getWidth()-300);
+        textKoreans.setY(Gdx.graphics.getHeight()-35);
 
-        lvlKor.setX(Gdx.graphics.getWidth()-150);
-        lvlKor.setY(Gdx.graphics.getHeight()-40);
+        lvlKor.setX(Gdx.graphics.getWidth()-300);
+        lvlKor.setY(Gdx.graphics.getHeight()-70);
 
-        energyKor.setX(Gdx.graphics.getWidth()-150);
-        energyKor.setY(Gdx.graphics.getHeight()-55);
+        energyKor.setX(Gdx.graphics.getWidth()-300);
+        energyKor.setY(Gdx.graphics.getHeight()-105);
 
         textAmericans.setX(50);
-        textAmericans.setY(Gdx.graphics.getHeight()-25);
+        textAmericans.setY(Gdx.graphics.getHeight()-35);
 
         lvlAmerican.setX(50);
-        lvlAmerican.setY(Gdx.graphics.getHeight()-40);
+        lvlAmerican.setY(Gdx.graphics.getHeight()-70);
 
         energyAm.setX(50);
-        energyAm.setY(Gdx.graphics.getHeight()-55);
+        energyAm.setY(Gdx.graphics.getHeight()-105);
 
         stage.addActor(textKoreans);
         stage.addActor(textAmericans);
@@ -481,6 +490,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             if (americanEnergy >= (firstSkillCost - americanUpgradeLvl)) {
                 americanEnergy -= (firstSkillCost - americanUpgradeLvl);
                 prostitutkaAm = true;
+                Music music = Gdx.audio.newMusic(Gdx.files.internal("music/spid.mp3"));
+                music.setVolume(1f);
+                music.play();
             }
         }
     }

@@ -44,7 +44,7 @@ public class ProstitutkaEntity extends Actor {
 
         body.setFixedRotation(false);
 
-        xVelocity = 2f;
+        xVelocity = 0.02f;
 
         box.dispose();
 
@@ -60,7 +60,7 @@ public class ProstitutkaEntity extends Actor {
         batch.draw(texture, getX(), getY(), width * PIXELS_IN_METER, height * PIXELS_IN_METER, width * PIXELS_IN_METER, height * PIXELS_IN_METER, 1,
                 1, startAngle, 1, 1, 900, 900, false, false);
         body.setTransform(body.getPosition().x, body.getPosition().y, (float)(startAngle * 3.14/180));
-        startAngle += 10f;
+        startAngle += 5f;
     }
 
     public void setBodyX(float x){
