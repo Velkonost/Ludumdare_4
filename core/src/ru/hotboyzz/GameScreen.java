@@ -116,7 +116,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         parameter.size = 30;
 
         Music music5 = Gdx.audio.newMusic(Gdx.files.internal("music/bgaudio.mp3"));
-        music5.setVolume(0.01f);
+        music5.setVolume(0.1f);
         music5.play();
 
 
@@ -321,7 +321,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         stage.getBatch().end();
         world.step(delta, 6, 2);
         camera.update();
-        renderer.render(world, camera.combined);
+//        renderer.render(world, camera.combined);
         stage.draw();
 
         textAmericans.remove();
@@ -357,7 +357,7 @@ public class GameScreen extends BaseScreen implements InputProcessor {
     }
 
     private void addEnergy() {
-        americanEnergy += 5;
+        americanEnergy += 4;
         koreanEnergy += 3;
 
         if (americanEnergy > 100) americanEnergy = 100;
