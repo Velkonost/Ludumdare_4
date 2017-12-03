@@ -3,6 +3,7 @@ package ru.hotboyzz;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -489,6 +490,9 @@ public class GameScreen extends BaseScreen implements InputProcessor {
             if (koreanEnergy >= (firstSkillCost - koreanUpgradeLvl)) {
                 koreanEnergy -= (firstSkillCost - koreanUpgradeLvl);
                 isRockets = true;
+                Music music = Gdx.audio.newMusic(Gdx.files.internal("music/rocket.mp3"));
+                music.setVolume(1f);
+                music.play();
 //                int min = Math.min(americanMen.size(), koreanFirstSkillAmount);
 //                for (int i = 0; i < min; i++) {
 //                    americanMen.get(0).addAction(Actions.removeActor());
@@ -556,6 +560,11 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     break;
                 case 7:
                     if(!showRedbull) {
+                        Music music = Gdx.audio.newMusic(Gdx.files.internal("music/redbull.mp3"));
+                        music.setVolume(1f);
+                        music.play();
+
+
                         americanEnergy += 60;
                         showRedbull = true;
                         redbullX = 2f;
@@ -564,6 +573,10 @@ public class GameScreen extends BaseScreen implements InputProcessor {
                     break;
                 case 8:
                     if(!showRedbull) {
+                        Music music = Gdx.audio.newMusic(Gdx.files.internal("music/redbull.mp3"));
+                        music.setVolume(1f);
+                        music.play();
+
                         koreanEnergy += 60;
                         showRedbull = true;
                         redbullX = 9f;
