@@ -370,8 +370,8 @@ public class GameScreen extends BaseScreen implements InputProcessor {
         americanSpawnCooldawn -= 0.1f;
         koreanSpawnCooldawn -= 0.1f;
 
-        if (americanSpawnCooldawn <= 0.3f) americanSpawnCooldawn = 0.3f;
-        if (koreanSpawnCooldawn <= 0.2f) koreanSpawnCooldawn = 0.2f;
+        if (americanSpawnCooldawn <= 0.2f) americanSpawnCooldawn = 0.2f;
+        if (koreanSpawnCooldawn <= 0.1f) koreanSpawnCooldawn = 0.1f;
 
         timerUpSpawnSpeed = 0;
     }
